@@ -1,0 +1,2 @@
+source /Users/samuel.gomez/Documents/project/Personal/smartprint-hub/iot/firmware/.pio/build/esp32dev/gdbinit/symbols
+source /Users/samuel.gomez/Documents/project/Personal/smartprint-hub/iot/firmware/.pio/build/esp32dev/gdbinit/connect
