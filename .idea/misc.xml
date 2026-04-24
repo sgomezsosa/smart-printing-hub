@@ -3,4 +3,8 @@
   <component name="ProjectRootManager" version="2">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
+  <component name="WokwiProjectSettings">
+    <option name="wokwiConfigPath" value="iot/firmware/wokwi.toml" />
+    <option name="wokwiDiagramPath" value="iot/firmware/diagram.json" />
+  </component>
 </project>

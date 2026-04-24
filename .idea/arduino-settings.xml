@@ -3,5 +3,6 @@
   <component name="ArduinoSettingsState">
     <option name="comPort" value="cu.BLTH" />
     <option name="serialPort" value="cu.BLTH" />
+    <option name="activeBackend" value="esp-idf" />
   </component>
 </project>
