@@ -1,32 +1,33 @@
-#include "led_manager.h"
+#include "led_manager.hpp"
+
 #include "driver/gpio.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 
 #define LED_PIN GPIO_NUM_4
 
-static volatile led_state_t g_led_state = LED_STATE_CONNECTING;
+static volatile LedState g_led_state = LedState::CONNECTING;
 
 static void led_task(void *pvParameters)
 {
     gpio_reset_pin(LED_PIN);
     gpio_set_direction(LED_PIN, GPIO_MODE_OUTPUT);
 
-    while (1) {
+    while (true) {
         switch (g_led_state) {
-            case LED_STATE_CONNECTING:
+            case LedState::CONNECTING:
                 gpio_set_level(LED_PIN, 1);
                 vTaskDelay(pdMS_TO_TICKS(150));
                 gpio_set_level(LED_PIN, 0);
                 vTaskDelay(pdMS_TO_TICKS(150));
                 break;
 
-            case LED_STATE_CONNECTED:
+            case LedState::CONNECTED:
                 gpio_set_level(LED_PIN, 1);
                 vTaskDelay(pdMS_TO_TICKS(500));
                 break;
 
-            case LED_STATE_ERROR:
+            case LedState::ERROR:
                 gpio_set_level(LED_PIN, 1);
                 vTaskDelay(pdMS_TO_TICKS(800));
                 gpio_set_level(LED_PIN, 0);
@@ -36,12 +37,12 @@ static void led_task(void *pvParameters)
     }
 }
 
-void led_manager_init(void)
+void led_manager_init()
 {
-    xTaskCreate(led_task, "led_task", 2048, NULL, 5, NULL);
+    xTaskCreate(led_task, "led_task", 2048, nullptr, 5, nullptr);
 }
 
-void led_manager_set_state(led_state_t state)
+void led_manager_set_state(LedState state)
 {
     g_led_state = state;
 }

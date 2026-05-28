@@ -1,5 +1,5 @@
-#include "wifi_manager.h"
-#include "led_manager.h"
+#include "wifi_manager.hpp"
+#include "led_manager.hpp"
 
 #include <string.h>
 #include "esp_event.h"
@@ -28,18 +28,18 @@ static void wifi_event_handler(
 ) {
     if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_START) {
         printf("Iniciando conexión WiFi...\n");
-        led_manager_set_state(LED_STATE_CONNECTING);
+        led_manager_set_state(LedState::CONNECTING);
         esp_wifi_connect();
 
     } else if (event_base == WIFI_EVENT && event_id == WIFI_EVENT_STA_DISCONNECTED) {
         if (s_retry_num < MAX_RETRY) {
             s_retry_num++;
-            led_manager_set_state(LED_STATE_CONNECTING);
+            led_manager_set_state(LedState::CONNECTING);
             printf("WiFi desconectado, reintento %d/%d\n", s_retry_num, MAX_RETRY);
             ESP_LOGW(TAG, "WiFi desconectado, reintento %d/%d", s_retry_num, MAX_RETRY);
             esp_wifi_connect();
         } else {
-            led_manager_set_state(LED_STATE_ERROR);
+            led_manager_set_state(LedState::ERROR);
             ESP_LOGE(TAG, "No fue posible conectar a WiFi");
             xEventGroupSetBits(wifi_event_group, WIFI_FAIL_BIT);
         }
@@ -47,7 +47,7 @@ static void wifi_event_handler(
     } else if (event_base == IP_EVENT && event_id == IP_EVENT_STA_GOT_IP) {
         ip_event_got_ip_t *event = (ip_event_got_ip_t *)event_data;
         s_retry_num = 0;
-        led_manager_set_state(LED_STATE_CONNECTED);
+        led_manager_set_state(LedState::CONNECTED);
         ESP_LOGI(TAG, "Conectado. IP: " IPSTR, IP2STR(&event->ip_info.ip));
         xEventGroupSetBits(wifi_event_group, WIFI_CONNECTED_BIT);
     }
@@ -93,7 +93,7 @@ void wifi_manager_init(void)
     } else if (bits & WIFI_FAIL_BIT) {
         ESP_LOGE(TAG, "Fallo definitivo al conectar a SSID: %s", WIFI_SSID);
     } else {
-        led_manager_set_state(LED_STATE_ERROR);
+        led_manager_set_state(LedState::ERROR);
         ESP_LOGW(TAG, "Timeout esperando conexión WiFi");
     }
 }

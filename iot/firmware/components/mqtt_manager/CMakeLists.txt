@@ -1,5 +1,5 @@
 idf_component_register(
-    SRCS "mqtt_manager.c"
+    SRCS "mqtt_manager.cpp"
     INCLUDE_DIRS "include"
     REQUIRES mqtt esp_event
 )
