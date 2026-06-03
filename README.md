@@ -2,265 +2,571 @@
 
 ## Overview
 
-SmartPrint Hub is a full-stack project designed to integrate **IoT (ESP32)**, **Backend services**, **Frontend applications**, and **Infrastructure** into a unified system for managing and monitoring 3D printing workflows.
+SmartPrint Hub is a full-stack IoT, Robotics, and Cloud Architecture project designed to integrate embedded devices, backend services, web applications, and cloud infrastructure into a unified platform.
 
-The goal is to build a **production-ready, scalable architecture** that combines:
+The project serves as both:
 
-* IoT device control (ESP32 + sensors/actuators)
-* Cloud-native backend services (Java / AWS)
-* Web-based user interfaces
-* Infrastructure as Code (IaC)
+* A production-grade learning platform
+* A portfolio project demonstrating IoT, Cloud, Software Architecture, and Robotics skills
 
-This repository is structured as a **monorepo**, enabling consistent development practices, shared context, and easier system evolution.
+The long-term vision is to build a modular ecosystem capable of:
 
----
-
-## Project Goals
-
-* Build a **modular IoT platform** for device monitoring and control
-* Integrate **real-time communication (MQTT)**
-* Apply **cloud architecture principles (AWS)**
-* Create a **portfolio-grade system** demonstrating Software Architecture skills
-* Enable future expansion into:
-
-    * Robotics
-    * AI-assisted workflows
-    * Smart manufacturing
+* Managing IoT devices
+* Monitoring telemetry in real time
+* Controlling robotic systems
+* Integrating AI-powered automation
+* Supporting smart manufacturing and 3D printing workflows
 
 ---
 
-## Repository Structure
+# Project Goals
 
-```
+## Technical Goals
+
+* Build a modular IoT platform using ESP32 and MQTT
+* Implement a well-defined MQTT API
+* Apply cloud-native architecture principles
+* Integrate robotics and autonomous devices
+* Learn ROS2 and DDS communication models
+* Implement Infrastructure as Code
+* Develop AI-assisted automation capabilities
+
+## Learning Goals
+
+* Embedded Software Engineering
+* ESP-IDF Development
+* MQTT and Event-Driven Architecture
+* AWS Cloud Architecture
+* Robotics Engineering
+* Distributed Systems
+* Software Architecture
+
+---
+
+# Repository Structure
+
+```text
 smartprint-hub/
-  backend/        # Java backend services (API, business logic)
-  frontend/       # Web UI / dashboards
-  iot/            # ESP32 firmware and device logic
-  infra/          # Infrastructure as Code (AWS, networking, deployment)
+│
+├── README.md
+│
+├── backend/
+│   ├── services/
+│   ├── api/
+│   ├── domain/
+│   └── infrastructure/
+│
+├── frontend/
+│   ├── web/
+│   └── shared/
+│
+├── infra/
+│   ├── terraform/
+│   ├── aws/
+│   └── deployment/
+│
+└── iot/
+    └── firmware/
+        ├── main/
+        └── components/
+            ├── led_manager/
+            ├── wifi_manager/
+            ├── mqtt_manager/
+            └── mqtt_api/
 ```
 
 ---
 
-## Module Breakdown
+# System Architecture
 
-### 1. IoT Module (`iot/`)
-
-#### Purpose
-
-Handles device-level logic using ESP32, including connectivity, telemetry, and hardware interaction.
-
-#### Structure
-
+```text
++------------------+
+| Frontend UI      |
++--------+---------+
+         |
+         | REST / WebSocket
+         |
++--------v---------+
+| Backend Services |
++--------+---------+
+         |
+         | MQTT
+         |
++--------v---------+
+| MQTT Broker      |
++--------+---------+
+         |
+         |
++--------v---------+
+| ESP32 Devices    |
++------------------+
 ```
-iot/
-  firmware/
-    main/
-    components/
-      led_manager/
-      wifi_manager/
-      mqtt_manager/
+
+Future Robotics Architecture:
+
+```text
++------------------+
+| Frontend UI      |
++--------+---------+
+         |
+         | REST / WebSocket
+         |
++--------v---------+
+| Backend Services |
++--------+---------+
+         |
+         | MQTT
+         |
++--------v---------+
+| MQTT Broker      |
++--------+---------+
+         |
+         |
++--------v---------+
+| Robot Fleet      |
+| ESP32 / ROS2     |
++------------------+
 ```
 
-#### Components
+---
 
-* **led_manager**
+# Modules
 
-    * Controls LED states for visual feedback
-    * States: CONNECTING, CONNECTED, ERROR
+---
 
-* **wifi_manager**
+## IoT Module
 
-    * Handles WiFi connection lifecycle
-    * Manages retries and connection state
+Location:
 
-* **mqtt_manager**
+```text
+iot/firmware
+```
 
-    * Connects to MQTT broker
-    * Publishes telemetry (heartbeat)
-    * Will handle subscriptions in future
+### Purpose
 
-#### Technologies
+Implements the firmware running on ESP32 devices.
 
-* ESP-IDF (Espressif IoT Development Framework)
-* PlatformIO
+Responsible for:
+
+* Hardware interaction
+* Connectivity
+* Telemetry
+* Device state management
+* MQTT communication
+
+---
+
+### Current Components
+
+#### led_manager
+
+Responsibilities:
+
+* LED state management
+* Visual feedback
+
+States:
+
+```text
+CONNECTING
+CONNECTED
+ERROR
+```
+
+Technologies:
+
+* ESP-IDF
 * FreeRTOS
-* MQTT protocol
-
-#### Tools
-
-* PlatformIO CLI
-* Wokwi Simulator (for development)
-* ESP32 hardware (for real testing)
+* GPIO
 
 ---
 
-### 2. Backend Module (`backend/`)
+#### wifi_manager
 
-#### Purpose
+Responsibilities:
 
-Provides APIs and business logic to interact with IoT devices and process data.
+* WiFi connection lifecycle
+* Retry handling
+* Connection monitoring
 
-#### Planned Responsibilities
+Technologies:
 
-* REST APIs for device management
-* MQTT consumer/producer integration
+* ESP-IDF WiFi
+* FreeRTOS
+
+---
+
+#### mqtt_manager
+
+Responsibilities:
+
+* MQTT broker connection
+* Publish/Subscribe operations
+* MQTT event handling
+
+Technologies:
+
+* ESP-MQTT
+* MQTT 5.0 concepts
+
+---
+
+#### mqtt_api
+
+Responsibilities:
+
+* MQTT API contract definition
+* Topic definitions
+* Payload builders
+* Event schema management
+
+Technologies:
+
+* Modern C++
+* JSON payload generation
+
+---
+
+### Technologies
+
+* ESP32
+* ESP-IDF 5.x
+* FreeRTOS
+* MQTT
+* PlatformIO
+* C++17
+
+### Development Tools
+
+* PlatformIO
+* Wokwi
+* ESP-IDF
+* Git
+
+---
+
+## Backend Module
+
+Location:
+
+```text
+backend/
+```
+
+### Purpose
+
+Provides business logic and APIs for SmartPrint Hub.
+
+### Planned Responsibilities
+
+* Device registration
+* Command dispatching
+* Telemetry processing
 * Data persistence
-* Authentication and authorization
+* Authentication
+* Authorization
 
-#### Technologies
+### Technologies
 
-* Java (Spring Boot)
-* REST APIs
-* AWS services (planned):
-
-    * API Gateway
-    * Lambda / ECS
-    * DynamoDB / RDS
-
-#### Tools
-
-* Maven / Gradle
+* Java
+* Spring Boot
+* Maven
 * Docker
-* Postman / Insomnia
+
+### Future AWS Integrations
+
+* API Gateway
+* ECS
+* Lambda
+* DynamoDB
+* RDS
 
 ---
 
-### 3. Frontend Module (`frontend/`)
+## Frontend Module
 
-#### Purpose
+Location:
 
-User interface for interacting with devices, monitoring telemetry, and controlling workflows.
+```text
+frontend/
+```
 
-#### Planned Features
+### Purpose
 
-* Real-time device status dashboard
+Provides a user interface for managing devices and robots.
+
+### Planned Features
+
+* Device dashboard
+* Robot dashboard
 * Telemetry visualization
-* Command/control interface
+* Real-time monitoring
+* Command console
 
-#### Technologies
+### Technologies
 
-* React / Next.js (planned)
+* React
+* Next.js
 * TypeScript
-* WebSockets / MQTT over Web
 
-#### Tools
+### Tools
 
 * Node.js
-* npm / yarn
+* npm
 
 ---
 
-### 4. Infrastructure Module (`infra/`)
+## Infrastructure Module
 
-#### Purpose
+Location:
 
-Defines and manages cloud infrastructure required for the system.
-
-#### Responsibilities
-
-* Cloud resource provisioning
-* Networking setup
-* Deployment pipelines
-
-#### Technologies
-
-* AWS (primary target)
-* Terraform / AWS CDK (to be defined)
-
-#### Planned Services
-
-* AWS IoT Core
-* S3
-* CloudWatch
-* IAM
-
----
-
-## Communication Architecture
-
-```
-ESP32 (IoT)
-   ↓ MQTT
-Broker (Local / Cloud)
-   ↓
-Backend Services
-   ↓ REST / WebSocket
-Frontend UI
+```text
+infra/
 ```
 
+### Purpose
+
+Defines cloud infrastructure and deployment processes.
+
+### Planned Responsibilities
+
+* Resource provisioning
+* CI/CD
+* Networking
+* Monitoring
+
+### Technologies
+
+* AWS
+* Terraform
+* GitHub Actions
+
 ---
 
-## Current Status
+# MQTT API
 
-### Implemented
+The MQTT API defines communication contracts between SmartPrint devices and the platform.
 
-* ESP32 firmware (ESP-IDF)
-* Modular component architecture
+---
+
+## Topic Structure
+
+```text
+smartprint/devices/{deviceId}/heartbeat
+smartprint/devices/{deviceId}/telemetry
+smartprint/devices/{deviceId}/state
+smartprint/devices/{deviceId}/events
+smartprint/devices/{deviceId}/commands
+```
+
+Current Device:
+
+```text
+esp32-01
+```
+
+---
+
+## Heartbeat
+
+Topic:
+
+```text
+smartprint/devices/esp32-01/heartbeat
+```
+
+Payload:
+
+```json
+{
+  "schemaVersion": "1.0",
+  "deviceId": "esp32-01",
+  "type": "HEARTBEAT",
+  "status": "ONLINE",
+  "firmwareVersion": "0.1.0",
+  "timestamp": 0
+}
+```
+
+---
+
+## State
+
+Topic:
+
+```text
+smartprint/devices/esp32-01/state
+```
+
+Payload:
+
+```json
+{
+  "schemaVersion": "1.0",
+  "deviceId": "esp32-01",
+  "type": "STATE_CHANGED",
+  "state": "CONNECTED",
+  "timestamp": 0
+}
+```
+
+---
+
+## Events
+
+Topic:
+
+```text
+smartprint/devices/esp32-01/events
+```
+
+Payload:
+
+```json
+{
+  "schemaVersion": "1.0",
+  "deviceId": "esp32-01",
+  "eventId": "evt-001",
+  "type": "COMMAND_RECEIVED",
+  "message": "Command processed successfully",
+  "timestamp": 0
+}
+```
+
+---
+
+## Commands
+
+Topic:
+
+```text
+smartprint/devices/esp32-01/commands
+```
+
+Payload:
+
+```json
+{
+  "schemaVersion": "1.0",
+  "commandId": "cmd-001",
+  "type": "SET_LED_STATE",
+  "payload": {
+    "state": "ERROR"
+  }
+}
+```
+
+---
+
+## Initial Command Set
+
+```text
+PING
+SET_LED_STATE
+PUBLISH_STATE
+```
+
+---
+
+# Robotics Roadmap
+
+## Phase 1
+
+SmartPrint Rover
+
+Hardware:
+
+* ESP32
+* Motor Driver
+* DC Motors
+* Distance Sensor
+* LEDs
+
+Capabilities:
+
+* Remote control
+* Telemetry
+* MQTT Commands
+* Obstacle detection
+
+---
+
+## Phase 2
+
+Autonomous Rover
+
+Features:
+
+* Mapping
+* Navigation
+* Path planning
+
+---
+
+## Phase 3
+
+ROS2 Integration
+
+Technologies:
+
+* ROS2
+* DDS
+* Micro-ROS
+
+Goals:
+
+* Multi-node architecture
+* Robot fleet management
+* MQTT bridge integration
+
+---
+
+# Current Status
+
+## Completed
+
+* ESP-IDF project setup
+* PlatformIO integration
+* Wokwi simulation
+* Modular architecture
 * WiFi connectivity
-* MQTT publishing (heartbeat)
-* Wokwi simulation setup
+* MQTT connectivity
+* MQTT heartbeat publishing
+* MQTT API design
 
-### In Progress
+## In Progress
 
-* MQTT subscriptions (commands)
-* Backend service skeleton
+* MQTT command subscriptions
+* Device state publishing
+* Event publishing
 
-### Planned
+## Planned
 
-* AWS IoT integration
-* Full backend implementation
+* Backend services
 * Frontend dashboard
-* CI/CD pipelines
+* AWS integration
+* Local MQTT broker
+* SmartPrint Rover
 
 ---
 
-## Development Workflow
+# Development Principles
 
-### IoT
-
-```bash
-cd iot/firmware
-pio run
-```
-
-### Simulation
-
-* Use Wokwi to simulate ESP32
-* Serial output enabled via `diagram.json`
+* Modular architecture
+* Component-based design
+* Clear communication contracts
+* Event-driven architecture
+* Infrastructure as Code
+* Documentation-first approach
 
 ---
 
-## Future Improvements
-
-* Add device provisioning
-* Secure MQTT (TLS, certificates)
-* OTA updates
-* AI-driven automation
-* Integration with 3D printing workflows
-
----
-
-## Contribution Guidelines
-
-* Keep modules decoupled
-* Follow component-based architecture
-* Document new features
-* Maintain consistency across modules
-
----
-
-## Notes
-
-This project is intended as a **learning + production-grade hybrid system**, evolving progressively over time. Documentation and architecture will continue to improve as new components are added.
-
----
-
-## Author
+# Author
 
 Samuel Gomez Sosa
 
 ---
 
-## License
+# License
 
-(To be defined)
+To be defined.

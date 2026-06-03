@@ -1,4 +1,5 @@
 #include "mqtt_manager.hpp"
+#include "mqtt_api.hpp"
 
 #include "esp_log.h"
 #include "mqtt_client.h"
@@ -74,12 +75,12 @@ void mqtt_manager_publish_heartbeat()
         return;
     }
 
-    const char *payload = "{\"deviceId\":\"esp32-01\",\"status\":\"ONLINE\"}";
+    const std::string payload = smartprint::mqtt_api::build_heartbeat_payload();
 
     int msg_id = esp_mqtt_client_publish(
         mqtt_client,
-        MQTT_HEARTBEAT_TOPIC,
-        payload,
+        smartprint::mqtt_api::TOPIC_HEARTBEAT,
+        payload.c_str(),
         0,
         1,
         0
